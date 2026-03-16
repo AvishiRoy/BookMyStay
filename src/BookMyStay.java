@@ -5,22 +5,42 @@ public class BookMyStay {
     public static void main(String[] args) {
 
         System.out.println("=================================");
-        System.out.println("Book My Stay - Centralized Inventory");
+        System.out.println("Book My Stay - Room Search");
         System.out.println("=================================");
 
-        // HashMap to store room availability
-        HashMap<String, Integer> roomInventory = new HashMap<>();
+        // Centralized room inventory
+        HashMap<String, Integer> inventory = new HashMap<>();
 
-        roomInventory.put("Single Room", 10);
-        roomInventory.put("Double Room", 5);
-        roomInventory.put("Suite Room", 2);
+        inventory.put("Single Room", 10);
+        inventory.put("Double Room", 5);
+        inventory.put("Suite Room", 0);
 
-        System.out.println("Current Room Availability:");
+        // Room details (domain model information)
+        HashMap<String, Integer> roomPrices = new HashMap<>();
 
-        for (String roomType : roomInventory.keySet()) {
-            System.out.println(roomType + " : " + roomInventory.get(roomType));
+        roomPrices.put("Single Room", 2000);
+        roomPrices.put("Double Room", 3500);
+        roomPrices.put("Suite Room", 6000);
+
+        System.out.println("Available Rooms:\n");
+
+        // Read-only search operation
+        for (String roomType : inventory.keySet()) {
+
+            int availableRooms = inventory.get(roomType);
+
+            // Validation: show only rooms with availability > 0
+            if (availableRooms > 0) {
+
+                System.out.println("Room Type : " + roomType);
+                System.out.println("Price     : ₹" + roomPrices.get(roomType));
+                System.out.println("Available : " + availableRooms);
+                System.out.println("-------------------------------");
+
+            }
         }
 
     }
 }
+
 
