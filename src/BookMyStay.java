@@ -1,19 +1,26 @@
+import java.util.HashMap;
+
 public class BookMyStay {
 
     public static void main(String[] args) {
 
         System.out.println("=================================");
-        System.out.println("Book My Stay - Room Availability");
+        System.out.println("Book My Stay - Centralized Inventory");
         System.out.println("=================================");
 
-        // Static room availability
-        int singleRoomAvailable = 10;
-        int doubleRoomAvailable = 5;
-        int suiteRoomAvailable = 2;
+        // HashMap to store room availability
+        HashMap<String, Integer> roomInventory = new HashMap<>();
 
-        System.out.println("Single Rooms Available : " + singleRoomAvailable);
-        System.out.println("Double Rooms Available : " + doubleRoomAvailable);
-        System.out.println("Suite Rooms Available  : " + suiteRoomAvailable);
+        roomInventory.put("Single Room", 10);
+        roomInventory.put("Double Room", 5);
+        roomInventory.put("Suite Room", 2);
+
+        System.out.println("Current Room Availability:");
+
+        for (String roomType : roomInventory.keySet()) {
+            System.out.println(roomType + " : " + roomInventory.get(roomType));
+        }
 
     }
 }
+
