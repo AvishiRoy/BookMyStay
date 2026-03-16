@@ -1,34 +1,88 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class BookMyStay {
 
     public static void main(String[] args) {
 
         System.out.println("=================================");
-        System.out.println("Book My Stay - Booking Request Queue");
+        System.out.println("Book My Stay - Reservation Allocation");
         System.out.println("=================================");
 
-        // Queue to store booking requests
+        // Inventory (room availability)
+        HashMap<String, Integer> inventory = new HashMap<>();
+
+        inventory.put("Single Room", 2);
+        inventory.put("Double Room", 1);
+        inventory.put("Suite Room", 1);
+
+        // Booking request queue (FIFO)
         Queue<String> bookingQueue = new LinkedList<>();
 
-        // Guests submitting booking requests
-        bookingQueue.add("Reservation: Guest A - Single Room");
-        bookingQueue.add("Reservation: Guest B - Double Room");
-        bookingQueue.add("Reservation: Guest C - Suite Room");
+        bookingQueue.add("Guest A:Single Room");
+        bookingQueue.add("Guest B:Double Room");
+        bookingQueue.add("Guest C:Single Room");
+        bookingQueue.add("Guest D:Suite Room");
 
-        System.out.println("Booking Requests Received:\n");
+        // Track allocated room IDs (prevents duplicates)
+        Set<String> allocatedRoomIds = new HashSet<>();
 
-        // Display queue contents in arrival order
-        for (String request : bookingQueue) {
-            System.out.println(request);
+        // Map room types to assigned room IDs
+        HashMap<String, Set<String>> allocationMap = new HashMap<>();
+
+        int roomCounter = 1;
+
+        System.out.println("\nProcessing Reservations:\n");
+
+        // Process queue
+        while (!bookingQueue.isEmpty()) {
+
+            String request = bookingQueue.poll();
+
+            String[] parts = request.split(":");
+
+            String guestName = parts[0];
+            String roomType = parts[1];
+
+            int availableRooms = inventory.getOrDefault(roomType, 0);
+
+            if (availableRooms > 0) {
+
+                // Generate unique room ID
+                String roomId = roomType.replace(" ", "") + "-" + roomCounter++;
+
+                // Ensure uniqueness
+                if (!allocatedRoomIds.contains(roomId)) {
+
+                    allocatedRoomIds.add(roomId);
+
+                    allocationMap.putIfAbsent(roomType, new HashSet<>());
+                    allocationMap.get(roomType).add(roomId);
+
+                    // Update inventory
+                    inventory.put(roomType, availableRooms - 1);
+
+                    System.out.println("Reservation Confirmed:");
+                    System.out.println(guestName + " → " + roomType + " (" + roomId + ")");
+                    System.out.println();
+                }
+
+            } else {
+
+                System.out.println("Reservation Failed:");
+                System.out.println(guestName + " → " + roomType + " (No Availability)");
+                System.out.println();
+            }
         }
 
-        System.out.println("\nRequests are stored in FIFO order.");
-        System.out.println("No room allocation performed at this stage.");
+        System.out.println("Final Inventory State:");
+
+        for (String roomType : inventory.keySet()) {
+            System.out.println(roomType + " Remaining : " + inventory.get(roomType));
+        }
 
     }
 }
+
 
 
 
